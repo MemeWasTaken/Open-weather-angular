@@ -1,1 +1,8 @@
-<p>main works!</p>
+<input type="text" [(ngModel)]="queryCity">
+<button (click)="getCoorCity()">Vai</button>
+<br>
+<div *ngIf="dataWeather">
+    <h1>{{dataWeather.name}}</h1>
+    <h2>{{dataWeather.main.temp}} &#8451;</h2>
+    <h2>{{dataWeather.weather[0].main}}: <em>{{dataWeather.weather[0].description}}</em></h2>
+</div>

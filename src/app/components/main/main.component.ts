@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpRequestService } from 'src/app/services/http-request.service';
+import { WeatherRequestService } from 'src/app/services/weather-request.service';
+import { CityRequestService } from 'src/app/services/city-request.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -8,15 +9,33 @@ import { Observable } from 'rxjs';
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit {
-  myObservable$: any;
-  data: any;
+  myObservableWeather$: any;
+  myObservableCity$: any;
+  dataWeather: any;
+  dataCity: any;
+  queryCity!: string;
+  
 
-  constructor(private rqst: HttpRequestService) {}
+  constructor(private weatherRqst: WeatherRequestService, private cityRqst: CityRequestService) {}
 
-  ngOnInit(): void {
-    this.myObservable$ = this.rqst.getData(35, 139).subscribe((dataApi) => {
+  ngOnInit(): void {}
+
+  getCoorCity() {
+    
+    this.myObservableCity$ = this.cityRqst.getCity(`${this.queryCity}`).subscribe((dataApi) => {
       console.log(dataApi);
-      this.data = dataApi;  
+      this.dataCity = dataApi;
+      if (this.dataCity) {
+        this.findWeather();
+      }
+    });
+  }
+
+  findWeather() { 
+
+    this.myObservableWeather$ = this.weatherRqst.getWeather(this.dataCity[0].lat, this.dataCity[0].lon).subscribe((dataApi) => {
+      console.log(dataApi);
+      this.dataWeather = dataApi;  
     })
   }
 
